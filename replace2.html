@@ -16,6 +16,9 @@
     --text:#2B3245;
     --text-mute:#8791A5;
     --danger:#C0463A;
+    --green:#4C8C6B;
+    --blue:#3B6FA3;
+    --purple:#7A5CA8;
     --radius:12px;
   }
   *{box-sizing:border-box;}
@@ -38,7 +41,7 @@
   .brand{display:flex; flex-direction:column; margin-right:8px;}
   .brand .title{font-size:18px; font-weight:700; letter-spacing:-.2px;}
   .brand .sub{font-size:12px; color:#C7D0E4; margin-top:2px;}
-  .search-wrap{position:relative; flex:1; min-width:200px; max-width:420px;}
+  .search-wrap{position:relative; flex:1; min-width:200px; max-width:380px;}
   .search-wrap input{
     width:100%; padding:9px 14px; border-radius:20px; border:none;
     font-size:14px; background:#28395C; color:#fff; outline:none;
@@ -65,7 +68,7 @@
   .btn-gold{background:var(--gold); color:var(--navy);}
   .btn-outline{background:transparent; color:#fff; border:1px solid rgba(255,255,255,.4);}
   .btn-outline.active{background:var(--gold); color:var(--navy); border-color:var(--gold);}
-  .header-actions{display:flex; gap:8px; margin-left:auto;}
+  .header-actions{display:flex; gap:8px; margin-left:auto; flex-wrap:wrap;}
 
   /* ---------- layout ---------- */
   main{max-width:1080px; margin:0 auto; padding:20px 20px 80px;}
@@ -91,11 +94,28 @@
   }
   .recent-empty{font-size:13px; color:var(--text-mute);}
 
+  /* ---------- snapshot bar ---------- */
+  .snapshot-bar{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 16px; margin-bottom:20px;
+  }
+  .snapshot-bar label{font-size:13px; font-weight:700; color:var(--navy);}
+  .snapshot-bar input[type=month]{padding:7px 10px; border:1px solid var(--line); border-radius:7px; font-size:13px;}
+  .snapshot-active-banner{
+    display:none; align-items:center; gap:10px; background:var(--gold-soft); color:var(--navy);
+    border-radius:9px; padding:10px 14px; margin-bottom:16px; font-size:13px; font-weight:600;
+  }
+  .snapshot-active-banner.show{display:flex;}
+  .snapshot-active-banner button{margin-left:auto;}
+
   .toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;}
   .toolbar h2{font-size:15px; color:var(--navy); margin:0;}
+  .toolbar .toggle-link{font-size:12px; color:var(--navy-soft); text-decoration:underline; cursor:pointer;}
   .admin-tools{display:none; gap:8px;}
   .admin-tools.show{display:flex;}
   .btn-navy{background:var(--navy); color:#fff;}
+  .btn-light{background:var(--bg); color:var(--navy); border:1px solid var(--line);}
 
   #treeContainer{display:flex; flex-direction:column; gap:10px;}
   .tree-root > .node-row{margin-bottom:2px;}
@@ -125,7 +145,17 @@
   }
   .node-children{margin-left:26px; border-left:1px dashed var(--line); padding-left:14px; margin-top:4px;}
   .node-children.collapsed{display:none;}
-  .add-child-hint{margin-left:auto; font-size:11px; color:var(--text-mute); flex-shrink:0;}
+
+  .closed-list{display:flex; flex-direction:column; gap:6px; margin-top:10px;}
+  .closed-list.collapsed{display:none;}
+  .closed-row{
+    display:flex; align-items:center; gap:8px; background:var(--card);
+    border:1px solid var(--line); border-radius:9px; padding:9px 12px; cursor:pointer; opacity:.75;
+  }
+  .closed-row:hover{opacity:1; border-color:var(--danger);}
+  .closed-row .node-name{color:var(--text-mute); text-decoration:line-through;}
+  .closed-tag{font-size:10.5px; color:var(--danger); background:#F6E4E1; padding:2px 7px; border-radius:10px; font-weight:700; flex-shrink:0;}
+  .closed-empty{font-size:12.5px; color:var(--text-mute); padding:4px 0;}
 
   .fab{
     position:fixed; right:24px; bottom:24px; z-index:45;
@@ -135,6 +165,14 @@
   }
   .fab.show{display:flex;}
   .fab:hover{opacity:.9;}
+
+  /* ---------- hover tooltip ---------- */
+  .hover-tip{
+    position:fixed; z-index:70; background:var(--navy); color:#fff; font-size:12px;
+    padding:8px 12px; border-radius:8px; max-width:260px; line-height:1.5;
+    opacity:0; pointer-events:none; transition:opacity .12s; box-shadow:0 6px 16px rgba(0,0,0,.2);
+  }
+  .hover-tip.show{opacity:1;}
 
   /* ---------- drawer ---------- */
   .overlay{
@@ -158,6 +196,10 @@
   .drawer-body{flex:1; overflow-y:auto; padding:18px 20px;}
   .drawer-section-title{font-size:12.5px; font-weight:700; color:var(--text-mute); margin:18px 0 10px; text-transform:uppercase; letter-spacing:.3px;}
   .drawer-section-title:first-child{margin-top:0;}
+  .closed-banner{
+    background:#F6E4E1; border:1px solid #E3B7AF; color:var(--danger); border-radius:9px;
+    padding:11px 14px; font-size:12.5px; margin-bottom:14px; line-height:1.6;
+  }
 
   .timeline{position:relative; padding-left:18px;}
   .timeline::before{content:'';position:absolute; left:5px; top:4px; bottom:4px; width:2px; background:var(--line);}
@@ -168,8 +210,9 @@
   }
   .tl-item.current::before{background:var(--gold);}
   .tl-card{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
-  .tl-period{font-size:11.5px; color:var(--text-mute); font-weight:600;}
-  .tl-current-tag{background:var(--gold-soft); color:var(--gold); font-size:10px; font-weight:700; padding:1px 7px; border-radius:8px; margin-left:6px;}
+  .tl-period{font-size:11.5px; color:var(--text-mute); font-weight:600; display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
+  .tl-current-tag{background:var(--gold-soft); color:var(--gold); font-size:10px; font-weight:700; padding:1px 7px; border-radius:8px;}
+  .type-tag{font-size:10px; font-weight:700; padding:1px 7px; border-radius:8px; color:#fff;}
   .tl-name{font-size:15px; font-weight:700; color:var(--navy); margin-top:4px;}
   .tl-parent{font-size:12px; color:var(--text-mute); margin-top:3px;}
   .tl-note{font-size:12.5px; color:var(--navy-soft); margin-top:6px; background:var(--bg); padding:6px 10px; border-radius:6px;}
@@ -190,8 +233,10 @@
   }
   .field textarea{resize:vertical; min-height:70px;}
   .field .req{color:var(--danger);}
+  .field .fhint{font-size:11px; color:var(--text-mute); margin-top:4px;}
   .form-actions{display:flex; gap:8px; margin-top:14px;}
   .form-cancel{background:var(--bg); color:var(--text-mute); border:1px solid var(--line);}
+  .form-danger{background:var(--danger); color:#fff;}
 
   .bulk-box{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; margin-bottom:20px; display:none;}
   .bulk-box.show{display:block;}
@@ -207,6 +252,25 @@
     box-shadow:0 6px 18px rgba(0,0,0,.2); z-index:80; opacity:0; pointer-events:none; transition:all .25s;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---------- mapping modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,28,48,.45); z-index:90;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:#fff; border-radius:14px; width:min(760px,100%); max-height:85vh;
+    display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.25);
+  }
+  .modal-head{padding:18px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px;}
+  .modal-head h3{margin:0; font-size:16px; color:var(--navy); flex:1;}
+  .modal-body{padding:16px 22px; overflow-y:auto;}
+  .map-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .map-table th{text-align:left; padding:8px 10px; background:var(--bg); color:var(--navy); font-size:11.5px; position:sticky; top:0;}
+  .map-table td{padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  .map-table td.code{font-family:'Courier New',monospace; color:var(--text-mute); white-space:nowrap;}
+  .modal-foot{padding:14px 22px; border-top:1px solid var(--line); display:flex; gap:8px; justify-content:flex-end;}
 
   @media (max-width:640px){
     header{padding:14px 16px;}
@@ -227,24 +291,36 @@
     <div id="searchResults" class="search-results"></div>
   </div>
   <div class="header-actions">
+    <button class="btn btn-outline" onclick="openMapModal()">코드 매핑표</button>
     <button class="btn btn-outline" id="adminToggleBtn" onclick="toggleAdminMode()">편집 모드</button>
     <button class="btn btn-gold" onclick="exportHTML()">파일로 저장</button>
   </div>
 </header>
 
 <main>
-  <div class="hint">💡 <b>부서명은 바뀌어도 조직건재코드는 바뀌지 않습니다.</b> 조직 카드를 클릭하면 그 조직의 명칭·소속 변경 이력을 확인할 수 있어요.</div>
+  <div class="hint">💡 <b>부서명은 바뀌어도 조직건재코드는 바뀌지 않습니다.</b> 조직 카드를 클릭하면 명칭·소속 변경 이력을 확인할 수 있고, 마우스를 올리면 이전 명칭이 미리보기로 뜹니다.</div>
 
   <div class="recent-box">
     <h3>🕓 최근 12개월 내 변경된 조직</h3>
     <div id="recentList" class="recent-list"></div>
   </div>
 
+  <div class="snapshot-bar">
+    <label>과거 시점으로 보기</label>
+    <input type="month" id="snapshotInput">
+    <button class="btn btn-navy" onclick="applySnapshot()">적용</button>
+    <button class="btn btn-light" onclick="clearSnapshot()">현재로 돌아가기</button>
+  </div>
+  <div class="snapshot-active-banner" id="snapshotBanner">
+    <span id="snapshotBannerText"></span>
+    <button class="btn btn-light" onclick="clearSnapshot()">현재로 돌아가기</button>
+  </div>
+
   <div class="bulk-box" id="bulkBox">
     <h3>엑셀에서 붙여넣기로 가져오기</h3>
     <div class="bulk-guide">
       엑셀에서 <b>조직건재코드, 조직명, 상위조직코드, 적용시작월(YYYY-MM), 비고</b> 순서로 열을 복사해 아래에 붙여넣으세요. (탭 또는 쉼표로 구분, 헤더 행 있어도 무방)<br>
-      상위조직코드가 없으면(최상위 조직) 비워두세요. 예: <code>SP001-05&#9;지상국운영팀&#9;SP001&#9;2024-01&#9;조직개편으로 소속 변경</code>
+      상위조직코드가 없으면(최상위 조직) 비워두세요. 명칭변경/소속변경 여부는 자동으로 판별됩니다. 예: <code>SP001-05&#9;지상국운영팀&#9;SP001&#9;2024-01&#9;조직개편으로 소속 변경</code>
     </div>
     <textarea id="bulkInput" placeholder="여기에 엑셀 내용을 붙여넣으세요"></textarea>
     <div class="form-actions">
@@ -255,16 +331,24 @@
   </div>
 
   <div class="toolbar">
-    <h2>조직도</h2>
+    <h2 id="treeTitle">조직도</h2>
     <div class="admin-tools" id="adminTools">
-      <button class="btn btn-outline" style="color:var(--navy); border-color:var(--line);" onclick="toggleBulkBox()">엑셀 붙여넣기</button>
+      <button class="btn btn-light" onclick="toggleBulkBox()">엑셀 붙여넣기</button>
     </div>
   </div>
 
   <div id="treeContainer"></div>
+
+  <div class="toolbar" style="margin-top:26px;">
+    <h2>폐지·통합된 조직 <span id="closedCount" style="color:var(--text-mute); font-weight:400;"></span></h2>
+    <span class="toggle-link" onclick="toggleClosedList()">보기/숨기기</span>
+  </div>
+  <div class="closed-list collapsed" id="closedList"></div>
 </main>
 
 <button class="fab" id="fabAdd" onclick="openNewOrgDrawer()">+ 새 조직 추가</button>
+
+<div class="hover-tip" id="hoverTip"></div>
 
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
@@ -278,28 +362,44 @@
   <div class="drawer-body" id="drawerBody"></div>
 </div>
 
+<div class="modal-overlay" id="mapModalOverlay" onclick="closeMapModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <h3>조직건재코드 매핑표</h3>
+      <button class="drawer-close" style="color:var(--navy);" onclick="closeMapModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <table class="map-table" id="mapTable"></table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-light" onclick="copyMapping()">클립보드에 복사</button>
+      <button class="btn btn-navy" onclick="downloadMappingCSV()">CSV 다운로드</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="application/json" id="orgDataStore">
 {
   "SP001": {"history":[
-    {"start":"2022-01","end":null,"name":"우주사업부","parentCode":null,"note":""}
-  ]},
+    {"start":"2022-01","end":null,"name":"우주사업부","parentCode":null,"changeType":"신설","note":""}
+  ], "closed": null},
   "SP001-01": {"history":[
-    {"start":"2022-01","end":"2023-12","name":"경영관리팀","parentCode":"SP001","note":""},
-    {"start":"2024-01","end":null,"name":"경영기획팀","parentCode":"SP001","note":"2024년 조직개편으로 명칭 변경"}
-  ]},
+    {"start":"2022-01","end":"2023-12","name":"경영관리팀","parentCode":"SP001","changeType":"신설","note":""},
+    {"start":"2024-01","end":null,"name":"경영기획팀","parentCode":"SP001","changeType":"명칭변경","note":"2024년 조직개편으로 명칭 변경"}
+  ], "closed": null},
   "SP001-02": {"history":[
-    {"start":"2022-01","end":"2024-06","name":"위성체계팀","parentCode":"SP001","note":""},
-    {"start":"2024-07","end":null,"name":"위성시스템팀","parentCode":"SP001","note":"명칭 변경"}
-  ]},
+    {"start":"2022-01","end":"2024-06","name":"위성체계팀","parentCode":"SP001","changeType":"신설","note":""},
+    {"start":"2024-07","end":null,"name":"위성시스템팀","parentCode":"SP001","changeType":"명칭변경","note":"명칭 변경"}
+  ], "closed": null},
   "SP001-03": {"history":[
-    {"start":"2022-01","end":null,"name":"제주우주센터","parentCode":"SP001","note":""}
-  ]},
+    {"start":"2022-01","end":null,"name":"제주우주센터","parentCode":"SP001","changeType":"신설","note":""}
+  ], "closed": null},
   "SP001-04": {"history":[
-    {"start":"2022-01","end":"2023-12","name":"지상국운영팀","parentCode":"SP001-02","note":""},
-    {"start":"2024-01","end":null,"name":"지상국운영팀","parentCode":"SP001","note":"조직개편으로 소속 변경 (위성시스템팀 하위 → 우주사업부 직속)"}
-  ]}
+    {"start":"2022-01","end":"2023-12","name":"지상국운영팀","parentCode":"SP001-02","changeType":"신설","note":""},
+    {"start":"2024-01","end":"2024-12","name":"지상국운영팀","parentCode":"SP001","changeType":"소속변경","note":"조직개편으로 소속 변경 (위성시스템팀 하위 → 우주사업부 직속)"}
+  ], "closed": {"date":"2025-01","mergedInto":"SP001-02","note":"조직 슬림화로 위성시스템팀에 통합"}}
 }
 </script>
 
@@ -307,22 +407,25 @@
 /* ============ state ============ */
 let ORG = {};
 let adminMode = false;
-let openCode = null; // 현재 drawer 에서 보고있는 코드 (신규 추가시 null)
+let openCode = null;
+let snapshotDate = null; // null = 현재 시점
 
 /* ============ init ============ */
 document.addEventListener('DOMContentLoaded', () => {
   const raw = document.getElementById('orgDataStore').textContent;
   try { ORG = JSON.parse(raw); } catch(e){ ORG = {}; }
+  document.getElementById('snapshotInput').value = todayMonth();
   renderAll();
 });
 
 function renderAll(){
   renderTree();
   renderRecent();
+  renderClosedList();
 }
 
 /* ============ date helpers ============ */
-function monthToNum(m){ // "2024-03" -> 202403
+function monthToNum(m){
   if(!m) return 999999;
   const [y,mo] = m.split('-').map(Number);
   return y*100+mo;
@@ -345,13 +448,33 @@ function todayMonth(){
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
 }
-function monthsAgo(m, n){ // is m within last n months of today?
+function monthsAgo(m, n){
   const cur = monthToNum(todayMonth());
   const target = monthToNum(m);
   const y1=Math.floor(cur/100), mo1=cur%100;
   const y2=Math.floor(target/100), mo2=target%100;
   const diff = (y1-y2)*12 + (mo1-mo2);
   return diff >= 0 && diff <= n;
+}
+
+/* ============ change type ============ */
+const TYPE_COLORS = {
+  '신설':'var(--green)', '명칭변경':'var(--gold)', '소속변경':'var(--blue)',
+  '명칭+소속변경':'var(--purple)', '기타':'var(--text-mute)'
+};
+function inferChangeType(prevEntry, name, parentCode){
+  if(!prevEntry) return '신설';
+  const nameChanged = prevEntry.name !== name;
+  const parentChanged = prevEntry.parentCode !== parentCode;
+  if(nameChanged && parentChanged) return '명칭+소속변경';
+  if(nameChanged) return '명칭변경';
+  if(parentChanged) return '소속변경';
+  return '기타';
+}
+function typeTagHtml(type){
+  if(!type) return '';
+  const color = TYPE_COLORS[type] || 'var(--text-mute)';
+  return `<span class="type-tag" style="background:${color};">${escapeHtml(type)}</span>`;
 }
 
 /* ============ data helpers ============ */
@@ -375,7 +498,15 @@ function entryAtDate(code, dateStr){
       return e;
     }
   }
-  return h[0] || null;
+  return null;
+}
+function existsAt(code, dateStr){
+  const h = sortedHistory(code);
+  if(h.length===0) return false;
+  if(monthToNum(dateStr) < monthToNum(h[0].start)) return false;
+  const org = ORG[code];
+  if(org.closed && monthToNum(dateStr) >= monthToNum(org.closed.date)) return false;
+  return true;
 }
 function parentNameAt(parentCode, dateStr){
   if(!parentCode) return '최상위 조직';
@@ -383,20 +514,32 @@ function parentNameAt(parentCode, dateStr){
   const e = entryAtDate(parentCode, dateStr) || latestEntry(parentCode);
   return e ? e.name : parentCode;
 }
-function buildChildrenMap(){
+function buildChildrenMap(date){
   const map = {};
   Object.keys(ORG).forEach(code=>{
-    const e = latestEntry(code);
+    if(date){
+      if(!existsAt(code, date)) return;
+    } else {
+      if(ORG[code].closed) return;
+    }
+    const e = date ? entryAtDate(code, date) : latestEntry(code);
     const p = e ? e.parentCode : null;
     if(!map[p]) map[p] = [];
     map[p].push(code);
   });
-  Object.values(map).forEach(arr=> arr.sort((a,b)=> currentName(a).localeCompare(currentName(b),'ko')));
+  Object.values(map).forEach(arr=> arr.sort((a,b)=> nameForDisplay(a,date).localeCompare(nameForDisplay(b,date),'ko')));
   return map;
+}
+function nameForDisplay(code, date){
+  if(date){
+    const e = entryAtDate(code, date);
+    return e ? e.name : currentName(code);
+  }
+  return currentName(code);
 }
 function allParentOptions(excludeCode){
   return Object.keys(ORG)
-    .filter(c=>c!==excludeCode)
+    .filter(c=>c!==excludeCode && !ORG[c].closed)
     .map(c=>({code:c, name:currentName(c)}))
     .sort((a,b)=>a.name.localeCompare(b.name,'ko'));
 }
@@ -405,17 +548,22 @@ function allParentOptions(excludeCode){
 function renderTree(){
   const container = document.getElementById('treeContainer');
   container.innerHTML = '';
-  const childrenMap = buildChildrenMap();
+  const childrenMap = buildChildrenMap(snapshotDate);
   const roots = (childrenMap[null] || childrenMap[undefined] || []);
+  document.getElementById('treeTitle').textContent = snapshotDate ? `조직도 (${fmtMonth(snapshotDate)} 기준)` : '조직도';
   if(roots.length===0 && Object.keys(ORG).length===0){
     container.innerHTML = '<div class="empty-msg">등록된 조직이 없습니다. 편집 모드를 켜고 조직을 추가해보세요.</div>';
     return;
   }
+  if(roots.length===0){
+    container.innerHTML = '<div class="empty-msg">해당 시점에 존재하는 조직이 없습니다.</div>';
+    return;
+  }
   roots.forEach(code=>{
-    container.appendChild(renderNode(code, childrenMap));
+    container.appendChild(renderNode(code, childrenMap, snapshotDate));
   });
 }
-function renderNode(code, childrenMap){
+function renderNode(code, childrenMap, date){
   const wrap = document.createElement('div');
   wrap.className = 'node';
   wrap.id = 'node-'+code;
@@ -432,7 +580,7 @@ function renderNode(code, childrenMap){
 
   const name = document.createElement('span');
   name.className = 'node-name';
-  name.textContent = currentName(code);
+  name.textContent = nameForDisplay(code, date);
   row.appendChild(name);
 
   const codeBadge = document.createElement('span');
@@ -452,6 +600,9 @@ function renderNode(code, childrenMap){
     if(ev.target === toggle) return;
     openHistoryDrawer(code);
   });
+  row.addEventListener('mouseenter', (ev)=> showHoverTip(code, ev));
+  row.addEventListener('mousemove', (ev)=> moveHoverTip(ev));
+  row.addEventListener('mouseleave', hideHoverTip);
 
   let childrenWrap = null;
   if(hasKids){
@@ -467,10 +618,69 @@ function renderNode(code, childrenMap){
   if(hasKids){
     childrenWrap = document.createElement('div');
     childrenWrap.className = 'node-children';
-    kids.forEach(k=> childrenWrap.appendChild(renderNode(k, childrenMap)));
+    kids.forEach(k=> childrenWrap.appendChild(renderNode(k, childrenMap, date)));
     wrap.appendChild(childrenWrap);
   }
   return wrap;
+}
+
+/* ============ hover tooltip ============ */
+function tooltipLinesFor(code){
+  const lines = [];
+  const org = ORG[code];
+  if(org.closed){
+    lines.push('⚠ 폐지됨 ('+fmtMonth(org.closed.date)+')');
+    if(org.closed.mergedInto && ORG[org.closed.mergedInto]) lines.push('→ '+currentName(org.closed.mergedInto)+'로 통합');
+  }
+  const h = sortedHistory(code);
+  if(h.length>1){
+    const prev = h[h.length-2];
+    lines.push('이전: '+prev.name+' (~'+fmtMonth(prev.end)+')');
+  }
+  return lines;
+}
+function showHoverTip(code, ev){
+  const lines = tooltipLinesFor(code);
+  if(lines.length===0) return;
+  const tip = document.getElementById('hoverTip');
+  tip.innerHTML = lines.map(escapeHtml).join('<br>');
+  tip.classList.add('show');
+  moveHoverTip(ev);
+}
+function moveHoverTip(ev){
+  const tip = document.getElementById('hoverTip');
+  if(!tip.classList.contains('show')) return;
+  const x = ev.clientX + 16;
+  const y = ev.clientY + 12;
+  tip.style.left = Math.min(x, window.innerWidth-280) + 'px';
+  tip.style.top = y + 'px';
+}
+function hideHoverTip(){
+  document.getElementById('hoverTip').classList.remove('show');
+}
+
+/* ============ closed list ============ */
+function renderClosedList(){
+  const codes = Object.keys(ORG).filter(c=>ORG[c].closed).sort((a,b)=>monthToNum(ORG[b].closed.date)-monthToNum(ORG[a].closed.date));
+  document.getElementById('closedCount').textContent = '('+codes.length+')';
+  const box = document.getElementById('closedList');
+  box.innerHTML = '';
+  if(codes.length===0){
+    box.innerHTML = '<div class="closed-empty">폐지·통합된 조직이 없습니다.</div>';
+    return;
+  }
+  codes.forEach(code=>{
+    const row = document.createElement('div');
+    row.className = 'closed-row';
+    const mergedTxt = ORG[code].closed.mergedInto && ORG[ORG[code].closed.mergedInto]
+      ? ' · '+currentName(ORG[code].closed.mergedInto)+'로 통합' : '';
+    row.innerHTML = `<span class="node-name">${escapeHtml(currentName(code))}</span><span class="node-code">${code}</span><span class="closed-tag">폐지 ${fmtMonth(ORG[code].closed.date)}${escapeHtml(mergedTxt)}</span>`;
+    row.addEventListener('click', ()=> openHistoryDrawer(code));
+    box.appendChild(row);
+  });
+}
+function toggleClosedList(){
+  document.getElementById('closedList').classList.toggle('collapsed');
 }
 
 /* ============ recent changes ============ */
@@ -480,15 +690,19 @@ function renderRecent(){
   const items = [];
   Object.keys(ORG).forEach(code=>{
     const h = sortedHistory(code);
-    for(let i=1;i<h.length;i++){ // 이력이 2건 이상인 경우, 각 변경 시점
-      const cur = h[i], prev = h[i-1];
+    for(let i=0;i<h.length;i++){
+      const cur = h[i];
       if(monthsAgo(cur.start, 12)){
-        items.push({code, start:cur.start, from:prev.name, to:cur.name, note:cur.note});
+        const prev = h[i-1];
+        items.push({
+          code, start:cur.start, type: cur.changeType || inferChangeType(prev, cur.name, cur.parentCode),
+          label: prev ? (prev.name+' → '+cur.name) : (cur.name+' (신설)')
+        });
       }
     }
-    // 신규 생성 조직도 표시 (첫 이력이 최근이면)
-    if(h.length>=1 && monthsAgo(h[0].start,12) && h.length===1){
-      items.push({code, start:h[0].start, from:null, to:h[0].name, note:h[0].note || '신규 조직 생성'});
+    if(ORG[code].closed && monthsAgo(ORG[code].closed.date, 12)){
+      const mergedTxt = ORG[code].closed.mergedInto && ORG[ORG[code].closed.mergedInto] ? ' → '+currentName(ORG[code].closed.mergedInto)+'로 통합' : ' (폐지)';
+      items.push({code, start:ORG[code].closed.date, type:'기타', label: currentName(code)+mergedTxt, closedItem:true});
     }
   });
   items.sort((a,b)=>monthToNum(b.start)-monthToNum(a.start));
@@ -499,16 +713,38 @@ function renderRecent(){
   items.forEach(it=>{
     const row = document.createElement('div');
     row.className = 'recent-item';
-    const label = it.from ? (it.from+' → '+it.to) : (it.to+' (신설)');
-    row.innerHTML = `<span class="date-badge">${fmtMonth(it.start)}</span><span>${escapeHtml(label)}</span>`;
-    row.addEventListener('click', ()=> jumpToNode(it.code));
+    const tag = it.closedItem ? typeTagHtml('폐지·통합') : typeTagHtml(it.type);
+    row.innerHTML = `<span class="date-badge">${fmtMonth(it.start)}</span>${tag}<span>${escapeHtml(it.label)}</span>`;
+    row.addEventListener('click', ()=> { clearSnapshot(); jumpToNode(it.code); });
     list.appendChild(row);
   });
 }
 function escapeHtml(s){
   const d = document.createElement('div');
-  d.textContent = s;
+  d.textContent = s==null ? '' : String(s);
   return d.innerHTML;
+}
+
+/* ============ snapshot ============ */
+function applySnapshot(){
+  const v = document.getElementById('snapshotInput').value;
+  if(!v){ showToast('조회할 월을 선택하세요.'); return; }
+  snapshotDate = v;
+  const banner = document.getElementById('snapshotBanner');
+  banner.classList.add('show');
+  document.getElementById('snapshotBannerText').textContent = `현재 ${fmtMonth(v)} 기준 조직도를 보고 있습니다. 이 시점 이후 생긴 조직이나 이미 폐지된 조직은 표시되지 않습니다.`;
+  document.getElementById('fabAdd').classList.remove('show');
+  document.getElementById('adminTools').classList.remove('show');
+  renderTree();
+}
+function clearSnapshot(){
+  snapshotDate = null;
+  document.getElementById('snapshotBanner').classList.remove('show');
+  if(adminMode){
+    document.getElementById('fabAdd').classList.add('show');
+    document.getElementById('adminTools').classList.add('show');
+  }
+  renderTree();
 }
 
 /* ============ search ============ */
@@ -522,10 +758,11 @@ document.getElementById('searchInput').addEventListener('input', (e)=>{
     const cur = latestEntry(code);
     const matchCurrent = cur && cur.name.includes(q);
     const pastMatch = h.find(x => x !== cur && x.name.includes(q));
+    const closedTag = ORG[code].closed ? ' · 폐지됨' : '';
     if(matchCurrent){
-      results.push({code, label:cur.name, meta: code});
+      results.push({code, label:cur.name, meta: code+closedTag});
     } else if(pastMatch){
-      results.push({code, label:cur.name, meta: `이전 명칭 '${pastMatch.name}' · ${code}`});
+      results.push({code, label:cur.name, meta: `이전 명칭 '${pastMatch.name}' · ${code}${closedTag}`});
     }
   });
   box.innerHTML = '';
@@ -539,6 +776,7 @@ document.getElementById('searchInput').addEventListener('input', (e)=>{
       item.addEventListener('click', ()=>{
         box.classList.remove('show');
         document.getElementById('searchInput').value='';
+        clearSnapshot();
         jumpToNode(r.code);
         openHistoryDrawer(r.code);
       });
@@ -553,9 +791,16 @@ document.addEventListener('click', (e)=>{
 });
 
 function jumpToNode(code){
-  // 상위로 올라가며 접힌 노드 펼치기
+  if(ORG[code] && ORG[code].closed){
+    document.getElementById('closedList').classList.remove('collapsed');
+    setTimeout(()=>{
+      const el = document.querySelector('#closedList');
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+    }, 50);
+    return;
+  }
   let cur = code;
-  const childrenMap = buildChildrenMap();
+  const childrenMap = buildChildrenMap(snapshotDate);
   const parentOf = {};
   Object.keys(childrenMap).forEach(p=>{
     (childrenMap[p]||[]).forEach(c=> parentOf[c]=p);
@@ -590,14 +835,38 @@ function openHistoryDrawer(code){
   document.getElementById('drawerCode').textContent = code;
   const body = document.getElementById('drawerBody');
   body.innerHTML = '';
+  const canEdit = adminMode && !snapshotDate;
 
-  if(adminMode){
+  if(ORG[code].closed){
+    const c = ORG[code].closed;
+    const mergedTxt = c.mergedInto && ORG[c.mergedInto] ? `<br>→ <b>${escapeHtml(currentName(c.mergedInto))}</b>(으)로 통합되었습니다.` : '';
+    const banner = document.createElement('div');
+    banner.className = 'closed-banner';
+    banner.innerHTML = `⚠ 이 조직은 <b>${fmtMonth(c.date)}</b>에 폐지되었습니다.${mergedTxt}${c.note ? '<br>'+escapeHtml(c.note) : ''}`;
+    body.appendChild(banner);
+    if(canEdit){
+      const restoreBtn = document.createElement('button');
+      restoreBtn.className = 'btn btn-light';
+      restoreBtn.style.marginBottom='12px';
+      restoreBtn.textContent = '폐지 취소 (복원)';
+      restoreBtn.addEventListener('click', ()=> restoreOrg(code));
+      body.appendChild(restoreBtn);
+    }
+  }
+
+  if(canEdit && !ORG[code].closed){
+    const btnRow = document.createElement('div');
+    btnRow.style.display='flex'; btnRow.style.gap='8px'; btnRow.style.flexWrap='wrap'; btnRow.style.marginBottom='4px';
     const addBtn = document.createElement('button');
     addBtn.className = 'btn btn-navy';
-    addBtn.style.marginBottom='4px';
     addBtn.textContent = '+ 이력 추가 (명칭/소속 변경)';
     addBtn.addEventListener('click', ()=> renderAddHistoryForm(code));
-    body.appendChild(addBtn);
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'btn btn-light';
+    closeBtn.textContent = '조직 폐지/통합 처리';
+    closeBtn.addEventListener('click', ()=> renderCloseOrgForm(code));
+    btnRow.appendChild(addBtn); btnRow.appendChild(closeBtn);
+    body.appendChild(btnRow);
   }
 
   const secTitle = document.createElement('div');
@@ -607,20 +876,21 @@ function openHistoryDrawer(code){
 
   const tl = document.createElement('div');
   tl.className = 'timeline';
-  const hist = sortedHistory(code).slice().reverse(); // 최신순
-  hist.forEach((entry, idxRev)=>{
-    const idx = hist.length-1-idxRev; // 원본 인덱스(오름차순 기준)
+  const hist = sortedHistory(code);
+  const histDesc = hist.slice().reverse();
+  histDesc.forEach((entry)=>{
+    const idx = hist.indexOf(entry);
     const item = document.createElement('div');
     item.className = 'tl-item' + (entry.end===null ? ' current' : '');
     const card = document.createElement('div');
     card.className = 'tl-card';
     card.innerHTML = `
-      <div class="tl-period">${fmtPeriod(entry.start, entry.end)}${entry.end===null?'<span class="tl-current-tag">현재</span>':''}</div>
+      <div class="tl-period">${fmtPeriod(entry.start, entry.end)}${entry.end===null?'<span class="tl-current-tag">현재</span>':''}${typeTagHtml(entry.changeType)}</div>
       <div class="tl-name">${escapeHtml(entry.name)}</div>
       <div class="tl-parent">상위 조직: ${escapeHtml(parentNameAt(entry.parentCode, entry.start))}</div>
       ${entry.note ? `<div class="tl-note">${escapeHtml(entry.note)}</div>` : ''}
     `;
-    if(adminMode){
+    if(canEdit){
       const actions = document.createElement('div');
       actions.className = 'tl-actions show';
       const editSpan = document.createElement('span');
@@ -639,12 +909,12 @@ function openHistoryDrawer(code){
   });
   body.appendChild(tl);
 
-  if(adminMode){
+  if(canEdit){
     const delOrgWrap = document.createElement('div');
     delOrgWrap.style.marginTop = '20px';
     const delOrgBtn = document.createElement('span');
     delOrgBtn.style.fontSize='12px'; delOrgBtn.style.color='var(--danger)'; delOrgBtn.style.cursor='pointer'; delOrgBtn.style.textDecoration='underline';
-    delOrgBtn.textContent = '이 조직 전체 삭제';
+    delOrgBtn.textContent = '이 조직 전체 삭제 (모든 이력 제거)';
     delOrgBtn.addEventListener('click', ()=> deleteOrg(code));
     delOrgWrap.appendChild(delOrgBtn);
     body.appendChild(delOrgWrap);
@@ -658,27 +928,38 @@ function renderAddHistoryForm(code){
   const box = document.createElement('div');
   box.className = 'form-box';
   const opts = allParentOptions(code).map(o=>`<option value="${o.code}">${escapeHtml(o.name)} (${o.code})</option>`).join('');
+  const typeOpts = ['명칭변경','소속변경','명칭+소속변경','기타'].map(t=>`<option value="${t}">${t}</option>`).join('');
   box.innerHTML = `
     <div class="field"><label>조직명 <span class="req">*</span></label><input type="text" id="f_name"></div>
     <div class="field"><label>상위 조직</label><select id="f_parent"><option value="">최상위 조직</option>${opts}</select></div>
     <div class="field"><label>적용 시작월 <span class="req">*</span></label><input type="month" id="f_start"></div>
+    <div class="field"><label>변경 유형</label><select id="f_type">${typeOpts}</select><div class="fhint">이름/상위조직 입력값을 기준으로 자동 추천되며, 필요 시 직접 바꿀 수 있어요.</div></div>
     <div class="field"><label>비고 (변경 사유 등)</label><textarea id="f_note" placeholder="예: 2024년 조직개편으로 명칭 변경"></textarea></div>
     <div class="form-actions">
       <button class="btn btn-navy" id="f_submit">저장</button>
       <button class="btn form-cancel" id="f_cancel">취소</button>
     </div>
   `;
-  const curParent = latestEntry(code) ? latestEntry(code).parentCode : null;
-  body.insertBefore(box, body.children[1]);
-  if(curParent) box.querySelector('#f_parent').value = curParent;
+  const curEntry = latestEntry(code);
+  body.appendChild(box);
+  if(curEntry) box.querySelector('#f_parent').value = curEntry.parentCode || '';
+  function updateAutoType(){
+    const name = box.querySelector('#f_name').value.trim();
+    const parent = box.querySelector('#f_parent').value || null;
+    if(!name) return;
+    box.querySelector('#f_type').value = inferChangeType(curEntry, name, parent);
+  }
+  box.querySelector('#f_name').addEventListener('input', updateAutoType);
+  box.querySelector('#f_parent').addEventListener('change', updateAutoType);
   box.querySelector('#f_cancel').addEventListener('click', ()=> openHistoryDrawer(code));
   box.querySelector('#f_submit').addEventListener('click', ()=>{
     const name = box.querySelector('#f_name').value.trim();
     const parent = box.querySelector('#f_parent').value || null;
     const start = box.querySelector('#f_start').value;
+    const type = box.querySelector('#f_type').value;
     const note = box.querySelector('#f_note').value.trim();
     if(!name || !start){ showToast('조직명과 시작월은 필수입니다.'); return; }
-    addHistoryEntry(code, name, parent, start, note);
+    addHistoryEntry(code, name, parent, start, type, note);
     openHistoryDrawer(code);
     renderAll();
     showToast('이력이 추가되었습니다.');
@@ -691,10 +972,12 @@ function renderEditHistoryForm(code, idx){
   const box = document.createElement('div');
   box.className = 'form-box';
   const opts = allParentOptions(code).map(o=>`<option value="${o.code}" ${o.code===entry.parentCode?'selected':''}>${escapeHtml(o.name)} (${o.code})</option>`).join('');
+  const typeOpts = ['신설','명칭변경','소속변경','명칭+소속변경','기타'].map(t=>`<option value="${t}" ${t===entry.changeType?'selected':''}>${t}</option>`).join('');
   box.innerHTML = `
     <div class="field"><label>조직명 <span class="req">*</span></label><input type="text" id="e_name" value="${escapeHtml(entry.name)}"></div>
     <div class="field"><label>상위 조직</label><select id="e_parent"><option value="">최상위 조직</option>${opts}</select></div>
     <div class="field"><label>적용 시작월 <span class="req">*</span></label><input type="month" id="e_start" value="${entry.start}"></div>
+    <div class="field"><label>변경 유형</label><select id="e_type">${typeOpts}</select></div>
     <div class="field"><label>비고</label><textarea id="e_note">${escapeHtml(entry.note||'')}</textarea></div>
     <div class="form-actions">
       <button class="btn btn-navy" id="e_submit">수정 저장</button>
@@ -707,10 +990,11 @@ function renderEditHistoryForm(code, idx){
     const name = box.querySelector('#e_name').value.trim();
     const parent = box.querySelector('#e_parent').value || null;
     const start = box.querySelector('#e_start').value;
+    const type = box.querySelector('#e_type').value;
     const note = box.querySelector('#e_note').value.trim();
     if(!name || !start){ showToast('조직명과 시작월은 필수입니다.'); return; }
     const h = sortedHistory(code);
-    h[idx] = {...h[idx], name, parentCode:parent, start, note};
+    h[idx] = {...h[idx], name, parentCode:parent, start, changeType:type, note};
     ORG[code].history = h;
     openHistoryDrawer(code);
     renderAll();
@@ -723,7 +1007,7 @@ function deleteHistoryEntry(code, idx){
   const h = sortedHistory(code);
   h.splice(idx,1);
   if(h.length>0){
-    h[h.length-1].end = null; // 마지막 남은 항목을 현재로
+    h[h.length-1].end = null;
   }
   ORG[code].history = h;
   if(h.length===0){ delete ORG[code]; closeDrawer(); }
@@ -733,21 +1017,64 @@ function deleteHistoryEntry(code, idx){
 }
 
 function deleteOrg(code){
-  if(!confirm(currentName(code)+' 조직과 모든 이력을 삭제할까요?\n하위 조직이 있다면 함께 최상위로 남게 됩니다.')) return;
+  if(!confirm(currentName(code)+' 조직과 모든 이력을 삭제할까요?')) return;
   delete ORG[code];
   closeDrawer();
   renderAll();
   showToast('조직이 삭제되었습니다.');
 }
 
-function addHistoryEntry(code, name, parentCode, start, note){
-  if(!ORG[code]) ORG[code] = {history:[]};
+function addHistoryEntry(code, name, parentCode, start, changeType, note){
+  if(!ORG[code]) ORG[code] = {history:[], closed:null};
   const h = sortedHistory(code);
-  // 기존 '현재' 항목 종료 처리
   const openEntry = h.find(e=>e.end===null);
   if(openEntry) openEntry.end = prevMonth(start);
-  h.push({start, end:null, name, parentCode, note});
+  h.push({start, end:null, name, parentCode, changeType: changeType || inferChangeType(openEntry, name, parentCode), note});
   ORG[code].history = h;
+}
+
+/* ============ close / restore org ============ */
+function renderCloseOrgForm(code){
+  const body = document.getElementById('drawerBody');
+  const box = document.createElement('div');
+  box.className = 'form-box';
+  const opts = allParentOptions(code).map(o=>`<option value="${o.code}">${escapeHtml(o.name)} (${o.code})</option>`).join('');
+  box.innerHTML = `
+    <div class="field"><label>폐지·통합 시점 <span class="req">*</span></label><input type="month" id="c_date" value="${todayMonth()}"></div>
+    <div class="field"><label>통합 대상 조직 (없으면 단순 폐지)</label><select id="c_target"><option value="">없음 (단순 폐지)</option>${opts}</select></div>
+    <div class="field"><label>비고</label><textarea id="c_note" placeholder="예: 조직 슬림화로 OOO팀에 통합"></textarea></div>
+    <div class="form-actions">
+      <button class="btn form-danger" id="c_submit">폐지 처리</button>
+      <button class="btn form-cancel" id="c_cancel">취소</button>
+    </div>
+  `;
+  body.appendChild(box);
+  box.querySelector('#c_cancel').addEventListener('click', ()=> openHistoryDrawer(code));
+  box.querySelector('#c_submit').addEventListener('click', ()=>{
+    const date = box.querySelector('#c_date').value;
+    const target = box.querySelector('#c_target').value || null;
+    const note = box.querySelector('#c_note').value.trim();
+    if(!date){ showToast('폐지 시점을 입력하세요.'); return; }
+    if(!confirm('이 조직을 폐지 처리할까요?')) return;
+    const h = sortedHistory(code);
+    const openEntry = h.find(e=>e.end===null);
+    if(openEntry) openEntry.end = date;
+    ORG[code].history = h;
+    ORG[code].closed = {date, mergedInto: target, note};
+    openHistoryDrawer(code);
+    renderAll();
+    showToast('조직이 폐지 처리되었습니다.');
+  });
+}
+function restoreOrg(code){
+  if(!confirm('폐지 처리를 취소하고 이 조직을 다시 활성 상태로 되돌릴까요?')) return;
+  const h = sortedHistory(code);
+  if(h.length>0) h[h.length-1].end = null;
+  ORG[code].history = h;
+  ORG[code].closed = null;
+  openHistoryDrawer(code);
+  renderAll();
+  showToast('폐지 처리가 취소되었습니다.');
 }
 
 /* ============ new org ============ */
@@ -781,7 +1108,7 @@ function openNewOrgDrawer(){
     const note = box.querySelector('#n_note').value.trim();
     if(!code || !name || !start){ showToast('조직건재코드, 조직명, 시작월은 필수입니다.'); return; }
     if(ORG[code]){ showToast('이미 존재하는 조직건재코드입니다.'); return; }
-    ORG[code] = {history:[{start, end:null, name, parentCode:parent, note}]};
+    ORG[code] = {history:[{start, end:null, name, parentCode:parent, changeType:'신설', note}], closed:null};
     renderAll();
     openHistoryDrawer(code);
     showToast('조직이 추가되었습니다.');
@@ -806,8 +1133,8 @@ function toggleAdminMode(){
   const btn = document.getElementById('adminToggleBtn');
   btn.classList.toggle('active', adminMode);
   btn.textContent = adminMode ? '편집 모드 끄기' : '편집 모드';
-  document.getElementById('fabAdd').classList.toggle('show', adminMode);
-  document.getElementById('adminTools').classList.toggle('show', adminMode);
+  document.getElementById('fabAdd').classList.toggle('show', adminMode && !snapshotDate);
+  document.getElementById('adminTools').classList.toggle('show', adminMode && !snapshotDate);
   if(!adminMode) toggleBulkBox(false);
 }
 function toggleBulkBox(force){
@@ -827,18 +1154,62 @@ function runBulkImport(){
     if(!code || !name || !start || code==='조직건재코드'){ skipped++; return; }
     const pCode = parentCode ? parentCode : null;
     if(ORG[code]){
-      // 이미 동일 시작월 항목이 있으면 스킵, 아니면 새 이력 추가
       const exists = ORG[code].history.some(e=>e.start===start);
       if(exists){ skipped++; return; }
-      addHistoryEntry(code, name, pCode, start, note||'');
+      addHistoryEntry(code, name, pCode, start, null, note||'');
       updated++;
     } else {
-      ORG[code] = {history:[{start, end:null, name, parentCode:pCode, note:note||''}]};
+      ORG[code] = {history:[{start, end:null, name, parentCode:pCode, changeType:'신설', note:note||''}], closed:null};
       added++;
     }
   });
   document.getElementById('bulkResult').textContent = `완료: 신규 ${added}건, 이력추가 ${updated}건, 스킵 ${skipped}건`;
   renderAll();
+}
+
+/* ============ mapping modal ============ */
+let mappingTSV = '';
+function openMapModal(){
+  const codes = Object.keys(ORG).sort((a,b)=>currentName(a).localeCompare(currentName(b),'ko'));
+  const rows = [['조직건재코드','현재명','이전 명칭 이력','상태']];
+  let html = '<thead><tr><th>코드</th><th>현재명</th><th>이전 명칭 이력</th><th>상태</th></tr></thead><tbody>';
+  codes.forEach(code=>{
+    const h = sortedHistory(code);
+    const chain = h.map(e=>e.name).filter((v,i,arr)=> i===0 || v!==arr[i-1]).join(' → ');
+    const status = ORG[code].closed ? ('폐지 '+fmtMonth(ORG[code].closed.date)) : '활성';
+    html += `<tr><td class="code">${code}</td><td>${escapeHtml(currentName(code))}</td><td>${escapeHtml(chain)}</td><td>${escapeHtml(status)}</td></tr>`;
+    rows.push([code, currentName(code), chain, status]);
+  });
+  html += '</tbody>';
+  document.getElementById('mapTable').innerHTML = html;
+  mappingTSV = rows.map(r=>r.join('\t')).join('\n');
+  document.getElementById('mapModalOverlay').classList.add('show');
+}
+function closeMapModal(ev){
+  document.getElementById('mapModalOverlay').classList.remove('show');
+}
+function copyMapping(){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(mappingTSV).then(()=> showToast('클립보드에 복사되었습니다.'))
+      .catch(()=> showToast('복사에 실패했습니다. 표를 직접 드래그해 복사해주세요.'));
+  } else {
+    showToast('이 브라우저에서는 자동 복사를 지원하지 않습니다.');
+  }
+}
+function downloadMappingCSV(){
+  const csv = '\uFEFF' + mappingTSV.split('\n').map(line=>{
+    return line.split('\t').map(cell=>{
+      const c = String(cell).replace(/"/g,'""');
+      return /[",\n]/.test(c) ? `"${c}"` : c;
+    }).join(',');
+  }).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = '조직건재코드_매핑표.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV 파일이 다운로드되었습니다.');
 }
 
 /* ============ export ============ */
@@ -872,4 +1243,3 @@ function showToast(msg){
 </script>
 </body>
 </html>
-
